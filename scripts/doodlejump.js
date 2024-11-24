@@ -13,5 +13,5 @@ window.onload = () => {
   boardHTML = document.getElementById("board");
   boardHTML.width = board.getWidth();
   boardHTML.height = board.getHeight();
-  context = boardHTML.getContext("2d"); // used for drawing on the board
+  context = boardHTML.getContext("2d"); //used for drawing on the board
 }

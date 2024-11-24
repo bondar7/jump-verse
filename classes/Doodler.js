@@ -35,6 +35,20 @@ export default class Doodler {
     this.#y = y;
   }
 
+  // Width, Height
+  getWidth() {
+    return this.#width;
+  }
+  getHeight() {
+    return this.#height;
+  }
+  setWidth(width) {
+    this.#width = width;
+  }
+  setHeight(height) {
+    this.#height = height;
+  }
+
   setImg(imageSrc) {
     const newImg = new Image();
     newImg.src = imageSrc;
