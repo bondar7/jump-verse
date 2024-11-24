@@ -14,7 +14,7 @@ export default class Doodler {
     this.#height = 60; // Doodler's height
     // Calculate initial position
     this.#x = (this.#boardWidth - this.#width) / 2; // Horizontal center
-    this.#y = this.#boardHeight - this.#height - 50; // Slightly above bottom
+    this.#y = this.#boardHeight - this.#height - 60; // Slightly above bottom
     // Doodler's img
     this.#img = null;
   }
@@ -49,10 +49,8 @@ export default class Doodler {
     this.#height = height;
   }
 
-  setImg(imageSrc) {
-    const newImg = new Image();
-    newImg.src = imageSrc;
-    this.img = newImg;
+  setImg(img) {
+    this.#img = img;
   }
   getImg() {
     return this.#img;
