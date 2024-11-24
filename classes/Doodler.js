@@ -13,8 +13,8 @@ export default class Doodler {
     this.#width = 60; // Doodler's width
     this.#height = 60; // Doodler's height
     // Calculate initial position
-    this.#x = (board.width - this.#width) / 2; // Horizontal center
-    this.#y = board.height - this.#height - 50; // Slightly above bottom
+    this.#x = (this.#boardWidth - this.#width) / 2; // Horizontal center
+    this.#y = this.#boardHeight - this.#height - 50; // Slightly above bottom
     // Doodler's img
     this.#img = null;
   }

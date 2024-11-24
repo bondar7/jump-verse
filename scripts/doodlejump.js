@@ -7,7 +7,7 @@ let boardHTML
 let context;
 
 //doodler
-const doodler = new Doodler();
+const doodler = new Doodler(board.getWidth(), board.getHeight());
 
 window.onload = () => {
   boardHTML = document.getElementById("board");
