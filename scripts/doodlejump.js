@@ -1,5 +1,7 @@
-import Board from "../classes/Board.js";
-import Doodler from "../classes/Doodler.js";
+import Board from "../models/board/Board.js";
+import Doodler from "../models/doodler/Doodler.js";
+import Platform from "../models/platform/Platform.js";
+// import platformArray from "../models/platform/platformArray.js";
 
 //board
 const board = new Board();
@@ -13,7 +15,15 @@ let doodlerLeftImg;
 
 //physics 
 let velocityX = 0;
-let velocityY = 0;
+
+//jump
+let velocityY = 0; // doodler 
+let initialVelocityY = -11; //starting velocity Y
+let gravity = 0.2;
+
+//platforms
+let platformArray;
+let platformImg;
 
 window.onload = () => {
   boardHTML = document.getElementById("board");
@@ -32,6 +42,11 @@ window.onload = () => {
   doodlerLeftImg = new Image();
   doodlerLeftImg.src = "../images/doodler-left-1.png";
 
+  platformImg = new Image();
+  platformImg.src = "../images/platform.png";
+
+  velocityY = initialVelocityY;
+  placePlatforms();
   requestAnimationFrame(update);
 
   //keylistener to move doodler
@@ -53,6 +68,15 @@ function update() {
     doodler.setX(board.getWidth());
   }
   context.drawImage(doodler.getImg(), doodler.getX(), doodler.getY(), doodler.getWidth(), doodler.getHeight());
+
+  //jump
+  velocityY += gravity;
+  doodler.setY(doodler.getY() + velocityY);
+
+  //platforms
+  platformArray.forEach((p) => {
+    context.drawImage(p.getImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
+  })
 }
 
 function moveDoodler(event) {
@@ -63,4 +87,10 @@ function moveDoodler(event) {
     velocityX = -4;
     doodler.setImg(doodlerLeftImg);
   }
+}
+
+function placePlatforms() {
+  platformArray = [];
+
+  platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, platformImg));
 }

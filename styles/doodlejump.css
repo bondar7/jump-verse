@@ -1,5 +1,9 @@
 body {
-  text-align: center;
+  margin: 0;
+  display: flex; /* Enable flexbox layout */
+  justify-content: center; /* Horizontally center items */
+  align-items: center; /* Vertically center items */
+  height: 100vh; /* Full viewport height */
 }
 
 #board {
