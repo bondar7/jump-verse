@@ -18,6 +18,7 @@ let velocityX = 0;
 let friction = 0.1;
 let isMovingRight = false;
 let isMovingLeft = false;
+let isRightImg = true;
 
 //jump
 let velocityY = 0; // doodler 
@@ -99,10 +100,12 @@ function moveDoodler(event) {
     velocityX = 4;
     doodler.setImg(doodlerRightImg);
     isMovingRight = true;
+    isRightImg = true;
   } else if (event.code == "ArrowLeft" || event.code == "KeyE") { //move left
     velocityX = -4;
     doodler.setImg(doodlerLeftImg);
     isMovingLeft = true;
+    isRightImg = false;
   }
 }
 //handle doodle's stopping
@@ -128,9 +131,52 @@ function placePlatforms() {
   }
 }
 
+// function detectCollision(a, b) {
+//   const noseWidth = 15; // Ширина носа (припустимо 10 пікселів)
+
+//   // Перевірка колізії для правої картинки (ніс з правого боку)
+//   if (isRightImg) {
+//     const aRight = a.getX() + a.getWidth() - noseWidth; // Віднімаємо ширину носа з правого боку
+//     return a.getX() < b.getX() + b.getWidth() &&
+//            aRight > b.getX() &&
+//            a.getY() < b.getY() + b.getHeight() &&
+//            a.getY() + a.getHeight() > b.getY();
+//   } 
+//   // Перевірка колізії для лівої картинки (ніс з лівого боку)
+//   else {
+//     const aLeft = a.getX() + noseWidth; // Віднімаємо ширину носа з лівого боку
+//     return aLeft < b.getX() + b.getWidth() &&
+//            a.getX() + a.getWidth() > b.getX() &&
+//            a.getY() < b.getY() + b.getHeight() &&
+//            a.getY() + a.getHeight() > b.getY();
+//   }
+// }
+
 function detectCollision(a, b) {
-  return a.getX() < b.getX() + b.getWidth()  &&  // a's top left corner doesn't reach b's top right corner
-         a.getX() + a.getWidth() > b.getX()  &&  // a's top right corner passes b's top left corner
-         a.getY() < b.getY() + b.getHeight() && // a's top left corner doesn't reach b's bottom left corner
-         a.getY() + a.getHeight() > b.getY();   // a's bottom left corner passes b's top left corner
+  const noseWidth = 30; // Ширина носа, яку ми не будемо враховувати для перевірки
+
+  let aLeft, aRight;
+
+  // Якщо дудлер повернутий вправо
+  if (isRightImg) {
+    aLeft = a.getX();  // Лівий край дудлера
+    aRight = a.getX() + a.getWidth() - noseWidth;  // Коригуємо правий край, зменшуючи на ширину носа
+  }
+  // Якщо дудлер повернутий вліво
+  else {
+    aLeft = a.getX() + noseWidth;  // Коригуємо лівий край, додаючи ширину носа
+    aRight = a.getX() + a.getWidth();  // Правий край не змінюється
+  }
+
+  const doodlerBottomY = a.getY() + a.getHeight();  // Нижня частина дудлера
+  const platformTopY = b.getY();  // Верхня частина платформи
+  const platformBottomY = b.getY() + b.getHeight();  // Нижня частина платформи
+
+  // Перевірка на колізію
+  return (
+    doodlerBottomY >= platformTopY &&                // Ноги дудлера торкаються платформи
+    doodlerBottomY <= platformBottomY &&             // Ноги не заходять нижче платформи
+    aRight > b.getX() &&                             // Правий край дудлера на платформі
+    aLeft < b.getX() + b.getWidth()                  // Лівий край дудлера на платформі
+  );
 }
