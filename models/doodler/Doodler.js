@@ -2,21 +2,27 @@ export default class Doodler {
     // Private fields
     #width; 
     #height;
+    #dirX
     #x;
     #y;
     #img;
     #boardWidth;
     #boardHeight;
+    isMovingRight; isMovingLeft;
   constructor(boardWidth, boardHeight) {
     this.#boardWidth = boardWidth;
     this.#boardHeight = boardHeight;
-    this.#width = 84; // Doodler's width
-    this.#height = 84; // Doodler's height
+    this.#width = 75; // Doodler's width
+    this.#height = 75; // Doodler's height
+    // Direction Doodler is moving
+    this.#dirX = 1;
     // Calculate initial position
     this.#x = (this.#boardWidth - this.#width) / 2; // Horizontal center
     this.#y = this.#boardHeight - this.#height - 60; // Slightly above bottom
     // Doodler's img
     this.#img = null;
+    this.isMovingRight = false;
+    this.isMovingLeft = false;
   }
 
   // Get position
@@ -54,5 +60,13 @@ export default class Doodler {
   }
   getImg() {
     return this.#img;
+  }
+
+  // Set x direction
+  setDirX(value) {
+    this.#dirX = value;
+  }
+  getDirX() {
+    return this.#dirX;
   }
 }

@@ -1,7 +1,7 @@
 export default class Board {
   #width;
   #height;
-  constructor(width = 550, height = 700) {
+  constructor(width = 500, height = 775) {
     this.#width = width;
     this.#height = height;
   }

@@ -5,8 +5,8 @@ export default class Platform {
   #y;
   #img;
   constructor(x, y, img) {
-    this.#width = 118;
-    this.#height = 35;
+    this.#width = 100;
+    this.#height = 30;
     this.#x = x;
     this.#y = y; 
     this.#img = img;
