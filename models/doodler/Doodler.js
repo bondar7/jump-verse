@@ -12,8 +12,8 @@ export default class Doodler {
   constructor(boardWidth, boardHeight) {
     this.#boardWidth = boardWidth;
     this.#boardHeight = boardHeight;
-    this.#width = 75; // Doodler's width
-    this.#height = 75; // Doodler's height
+    this.#width = 70; // Doodler's width
+    this.#height = 70; // Doodler's height
     // Direction Doodler is moving
     this.#dirX = 1;
     // Calculate initial position

@@ -11,6 +11,7 @@ let context;
 const doodler = new Doodler(board.getWidth(), board.getHeight());
 //doodler's sprites
 let doodlerRight;
+let doodlerFalling;
 
 //physics 
 let velocityX = 0;
@@ -23,7 +24,8 @@ let gravity = 0.2;
 
 //platforms
 let platformArray;
-let platformImg;
+let standartPlatform;
+let brokenPlatform;
 
 window.onload = () => {
   boardHTML = document.getElementById("board");
@@ -33,15 +35,19 @@ window.onload = () => {
 
   //load sprites for doodle
   doodlerRight = new Image();
-  doodlerRight.src = "../images/doodler-right-1.png";
+  doodlerRight.src = "../assets/doodler-right-1.png";
   doodler.setImg(doodlerRight); 
   doodlerRight.onload = () => {
     context.drawImage(doodler.getImg(), doodler.getX(), doodler.getY(), doodler.getWidth(), doodler.getHeight());
   }
+  doodlerFalling = new Image();
+  doodlerFalling.src = "../assets/doodler-falling.png";
 
   //load sprites for platforms
-  platformImg = new Image();
-  platformImg.src = "../images/platform.png";
+  standartPlatform = new Image();
+  standartPlatform.src = "../assets/standart-platform.png";
+  brokenPlatform = new Image();
+  brokenPlatform.src = "../assets/broken-platform.png";
 
   velocityY = initialVelocityY;
   placePlatforms();
@@ -139,19 +145,19 @@ function stopDoodler(event) {
 function placePlatforms() {
   platformArray = [];
 
-  platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, platformImg));
+  platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform));
 
   for (let i = 0; i < 4; i++) {
     let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
     platformArray.push(new Platform(
       randomX,
       board.getHeight() - 75*i - 300, 
-      platformImg));
+      standartPlatform));
   }
 }
 
 function detectCollision(a, b) {
-  const noseWidth = 24; // The width of the doodler's nose, which we will ignore for collision detection
+  const noseWidth = 21; // The width of the doodler's nose, which we will ignore for collision detection
 
   let aLeft, aRight;
 
