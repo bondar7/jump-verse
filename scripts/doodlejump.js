@@ -15,12 +15,15 @@ let doodlerFalling;
 
 //physics 
 let velocityX = 0;
-let friction = 0.1;
+let friction = 7.5;
 
 //jump
 let velocityY = 0; // doodler 
-let initialVelocityY = -9.5 ; //starting velocity Y
-let gravity = 0.2;
+let initialVelocityY = -800; //starting velocity Y
+let gravity = 1250;
+
+//for different refresh rates
+let lastTimestamp = null;
 
 //platforms
 let platformArray;
@@ -61,7 +64,16 @@ window.onload = () => {
 // GAME LOOP
 // When you're playing the game, if you move to the left or to the right - you're changing x and y coordinates.
 // So you need to update the canvas by redrawing it. For that reason we need the game loop.
-function update() {
+function update(timestamp) {
+  // Initialize the timestamp for the first frame
+  if (!lastTimestamp) {
+    lastTimestamp = timestamp; // Set the initial timestamp
+  }
+
+  // Calculate the time difference (deltaTime) between frames in seconds
+  let deltaTime = (timestamp - lastTimestamp) / 1000; // Convert milliseconds to seconds
+  lastTimestamp = timestamp; // Update the lastTimestamp for the next frame
+
   requestAnimationFrame(update);
   context.clearRect(0, 0, board.getWidth(), board.getHeight());
 
@@ -73,7 +85,7 @@ function update() {
     }
     
     //doodler
-    doodler.setX(doodler.getX() + velocityX);
+    doodler.setX(doodler.getX() + velocityX * deltaTime); // scaled by deltaTime
     if (doodler.getX() > board.getWidth()) {
       doodler.setX(0 - doodler.getWidth());
     } else if (doodler.getX() < 0 - doodler.getWidth()) {
@@ -81,8 +93,8 @@ function update() {
     }
     
     //jump physics
-    velocityY += gravity;
-    doodler.setY(doodler.getY() + velocityY);
+    velocityY += gravity * deltaTime;
+    doodler.setY(doodler.getY() + velocityY * deltaTime); // scaled by deltaTime
     
     //draw platforms
     platformArray.forEach((p) => {
@@ -124,11 +136,11 @@ function update() {
 //handle doodle's moving
 function moveDoodler(event) {
   if (event.code == "ArrowRight" || event.code == "KeyD") { //move right
-    velocityX = 4;
+    velocityX = 300;
     doodler.setDirX(1);
     doodler.isMovingRight = true;
   } else if (event.code == "ArrowLeft" || event.code == "KeyE") { //move left
-    velocityX = -4;
+    velocityX = -300;
     doodler.setDirX(-1);
     doodler.isMovingLeft = true;
   }
@@ -147,7 +159,7 @@ function placePlatforms() {
 
   platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform));
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 7; i++) {
     let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
     platformArray.push(new Platform(
       randomX,
