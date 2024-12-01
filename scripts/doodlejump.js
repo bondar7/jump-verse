@@ -10,7 +10,7 @@ let context;
 //doodler
 const doodler = new Doodler(board.getWidth(), board.getHeight());
 //doodler's sprites
-let doodlerRight;
+let doodlerDefault;
 let doodlerFalling;
 
 //physics 
@@ -30,6 +30,10 @@ let platformArray;
 let standartPlatform;
 let brokenPlatform;
 
+//animations
+const fallingSprites = [];
+let fallingSpriteCount = 0;
+
 window.onload = () => {
   boardHTML = document.getElementById("board");
   boardHTML.width = board.getWidth();
@@ -37,14 +41,16 @@ window.onload = () => {
   context = boardHTML.getContext("2d"); //used for drawing on the board
 
   //load sprites for doodle
-  doodlerRight = new Image();
-  doodlerRight.src = "../assets/doodler-right-1.png";
-  doodler.setImg(doodlerRight); 
-  doodlerRight.onload = () => {
+  doodlerDefault = new Image();
+  doodlerDefault.src = "../assets/doodler-right-1.png";
+  doodler.setImg(doodlerDefault); 
+  doodlerDefault.onload = () => {
     context.drawImage(doodler.getImg(), doodler.getX(), doodler.getY(), doodler.getWidth(), doodler.getHeight());
   }
   doodlerFalling = new Image();
   doodlerFalling.src = "../assets/doodler-falling.png";
+  
+  fallingSprites.push(doodlerFalling);
 
   //load sprites for platforms
   standartPlatform = new Image();
@@ -95,12 +101,17 @@ function update(timestamp) {
     //jump physics
     velocityY += gravity * deltaTime;
     doodler.setY(doodler.getY() + velocityY * deltaTime); // scaled by deltaTime
+    console.log(velocityY);
+
+    //animations
+    falling();
     
     //draw platforms
     platformArray.forEach((p) => {
       context.drawImage(p.getImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
       if (detectCollision(doodler, p) && velocityY >= 1) {
         velocityY = initialVelocityY;
+        doodler.setImg(doodlerDefault);
       }
     })
     
@@ -195,4 +206,25 @@ function detectCollision(a, b) {
     aRight > b.getX() &&                // The right edge of the doodler is on the platform
     aLeft < b.getX() + b.getWidth()    // The left edge of the doodler is on the platform
   );
+}
+
+// ANIMATIONS
+
+//main
+function animate(spriteList, spriteCount, frameSpeed) {
+  // (frameSpeed): визначає, скільки кадрів анімація буде залишатися
+  // на одному спрайті перед переключенням на наступний.
+  if (spriteCount >= spriteList.length * frameSpeed) {
+    spriteCount = 0;
+  }
+  const frameIndex = Math.floor(spriteCount / frameSpeed);
+  doodler.setImg(spriteList[frameIndex]); 
+  return spriteCount + 1;
+}
+
+//falling anim
+function falling() {
+  if (velocityY > 120) {
+   fallingSpriteCount = animate(fallingSprites, fallingSpriteCount, 25)
+  }
 }
