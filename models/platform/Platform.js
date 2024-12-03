@@ -4,12 +4,14 @@ export default class Platform {
   #x;
   #y;
   #img;
-  constructor(x, y, img) {
+  #isBroken;
+  constructor(x, y, img, isBroken) {
     this.#width = 87;
     this.#height = 17;
     this.#x = x;
     this.#y = y; 
     this.#img = img;
+    this.#isBroken = isBroken;
   }
     // Get position
     getX() {
@@ -41,5 +43,13 @@ export default class Platform {
     }
     getImg() {
       return this.#img;
+    }
+
+    // is broken platform
+    setIsBroken(value) {
+      this.#isBroken = value;
+    }
+    isBroken() {
+      return this.#isBroken;
     }
 }

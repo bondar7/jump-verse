@@ -27,6 +27,7 @@ let lastTimestamp = null;
 
 //platforms
 let platformArray;
+let movePlatforms = false;
 let standartPlatform;
 let brokenPlatform;
 
@@ -98,24 +99,47 @@ function update(timestamp) {
       doodler.setX(board.getWidth());
     }
     
-    //jump physics
-    velocityY += gravity * deltaTime;
-    doodler.setY(doodler.getY() + velocityY * deltaTime); // scaled by deltaTime
-    console.log(velocityY);
-
     //animations
     falling();
+
+    //jump physics
+    velocityY += gravity * deltaTime;
     
-    //draw platforms
+    //check collision
     platformArray.forEach((p) => {
-      context.drawImage(p.getImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
-      if (detectCollision(doodler, p) && velocityY >= 1) {
+      if (detectCollision(doodler, p) && velocityY >= 1 && !p.isBroken()) {
         velocityY = initialVelocityY;
         doodler.setImg(doodlerDefault);
+        movePlatforms = true; // enable platform movement
       }
+      //draw each platform from array
+      context.drawImage(p.getImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
     })
     
-    // draw doodler after platforms
+    if (movePlatforms) {
+      if (velocityY < 0 && doodler.getY() < board.getHeight() / 2) {
+      // move platforms downward as the doodler rises above the screen's midpoint
+      platformArray.forEach(p => {
+        p.setY(p.getY() + Math.abs(velocityY) * deltaTime);
+      })
+    } else if (velocityY > 0) {
+      // stop moving platforms when the doodler starts falling
+        movePlatforms = false;
+      }
+    }
+
+    if (!movePlatforms || doodler.getY() >= board.getHeight() / 2) {
+      // move the doodler if it's below the screen's midpoint
+      doodler.setY(doodler.getY() + velocityY * deltaTime); // scaled by deltaTime
+    }
+
+    //remove platforms that go off-screen and add new ones
+    if(platformArray.length > 0 && platformArray[0].getY() > board.getHeight()) {
+      platformArray.splice(0, 1);
+      newPlatform();
+    }
+    
+    //draw doodler after platforms
     drawDoodler();
   }
 
@@ -170,12 +194,42 @@ function placePlatforms() {
 
   platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform));
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 11; i++) {
     let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
+    if (Math.random() < 0.18) {
+      platformArray.push(new Platform(
+        randomX,
+        board.getHeight() - 50*i - 150, 
+        brokenPlatform,
+        true
+      ));
+    } else {
+      platformArray.push(new Platform(
+        randomX,
+        board.getHeight() - 50*i - 150, 
+        standartPlatform,
+        false
+    ));
+    }
+  }
+}
+
+function newPlatform() {
+  let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
+  if (Math.random() < 0.18) {
     platformArray.push(new Platform(
       randomX,
-      board.getHeight() - 75*i - 300, 
-      standartPlatform));
+      -17, // needs fix
+      brokenPlatform,
+      true
+    ));
+  } else {
+    platformArray.push(new Platform(
+      randomX,
+      -17, // needs fix
+      standartPlatform,
+      false
+    ));
   }
 }
 
