@@ -7,6 +7,9 @@ const board = new Board();
 let boardHTML
 let context;
 
+//score
+const score = document.getElementById("score");
+
 //doodler
 const doodler = new Doodler(board.getWidth(), board.getHeight());
 //doodler's sprites
@@ -28,6 +31,7 @@ let lastTimestamp = null;
 //platforms
 let platformArray;
 let movePlatforms = false;
+let lastPlatform;
 let standartPlatform;
 let brokenPlatform;
 
@@ -122,6 +126,8 @@ function update(timestamp) {
       platformArray.forEach(p => {
         p.setY(p.getY() + Math.abs(velocityY) * deltaTime);
       })
+      // update score
+      score.innerHTML = parseInt(score.innerHTML) + 1;
     } else if (velocityY > 0) {
       // stop moving platforms when the doodler starts falling
         movePlatforms = false;
@@ -194,29 +200,34 @@ function placePlatforms() {
 
   platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform));
 
-  for (let i = 0; i < 11; i++) {
+  // space between platforms should be random (#TODO)
+
+  for (let i = 0; i < 14; i++) {
     let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
     if (Math.random() < 0.18) {
       platformArray.push(new Platform(
         randomX,
-        board.getHeight() - 50*i - 150, 
+        board.getHeight() - 50*i - 185, 
         brokenPlatform,
         true
       ));
     } else {
       platformArray.push(new Platform(
         randomX,
-        board.getHeight() - 50*i - 150, 
+        board.getHeight() - 50*i - 185, 
         standartPlatform,
         false
     ));
-    }
   }
+ }
+  lastPlatform = platformArray[platformArray.length - 1];
 }
 
 function newPlatform() {
+  // space between platforms should be random (#TODO)
+  
   let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
-  if (Math.random() < 0.18) {
+  if (Math.random() < 0.18 && !lastPlatform.isBroken()) {
     platformArray.push(new Platform(
       randomX,
       -17, // needs fix
@@ -231,6 +242,7 @@ function newPlatform() {
       false
     ));
   }
+  lastPlatform = platformArray[platformArray.length - 1];
 }
 
 function detectCollision(a, b) {

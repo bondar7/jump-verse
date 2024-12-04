@@ -1,9 +1,40 @@
+@font-face {
+  font-family: "KaushanScript-Regular";
+  src: url("../fonts/KaushanScript-Regular.otf") format('opentype');
+}
+
 body {
   margin: 0;
   display: flex; /* Enable flexbox layout */
   justify-content: center; /* Horizontally center items */
   align-items: center; /* Vertically center items */
   height: 100vh; /* Full viewport height */
+}
+
+#content {
+  position: relative;
+  max-width: 775px;
+}
+
+#top-bar {
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  background-color: #c7e0f7b0;
+}
+
+#top-bar-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#score {
+  margin-left: 10px;
+  font-size: 30px;
+  font-family: "KaushanScript-Regular", sans-serif;
 }
 
 #board {
