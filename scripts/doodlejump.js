@@ -36,9 +36,14 @@ let standartPlatform;
 let brokenPlatform;
 
 //animations
+  //falling
 const fallingSprites = [];
 let fallingSpriteCount = 0;
-
+  //breaking platform
+const breakingSprites  = [];
+let breakingSpriteCount = 0;
+let startBreakPlatform = false;
+let platfromsToBreak = [];
 window.onload = () => {
   boardHTML = document.getElementById("board");
   boardHTML.width = board.getWidth();
@@ -47,21 +52,27 @@ window.onload = () => {
 
   //load sprites for doodle
   doodlerDefault = new Image();
-  doodlerDefault.src = "../assets/doodler-right-1.png";
+  doodlerDefault.src = "../assets/doodler/doodler-right-1.png";
   doodler.setImg(doodlerDefault); 
   doodlerDefault.onload = () => {
     context.drawImage(doodler.getImg(), doodler.getX(), doodler.getY(), doodler.getWidth(), doodler.getHeight());
   }
   doodlerFalling = new Image();
-  doodlerFalling.src = "../assets/doodler-falling.png";
+  doodlerFalling.src = "../assets/doodler/doodler-falling.png";
   
+  //load sprites for anims
   fallingSprites.push(doodlerFalling);
+  for (let i = 1; i < 11; i++) {
+    let img = new Image();
+    img.src = `../assets/platforms/breaking-anim/break_${i}.png`;
+    breakingSprites.push(img);
+  }
 
   //load sprites for platforms
   standartPlatform = new Image();
-  standartPlatform.src = "../assets/standart-platform.png";
+  standartPlatform.src = "../assets/platforms/standart-platform.png";
   brokenPlatform = new Image();
-  brokenPlatform.src = "../assets/broken-platform.png";
+  brokenPlatform.src = "../assets/platforms/broken-platform.png";
 
   velocityY = initialVelocityY;
   placePlatforms();
@@ -115,11 +126,20 @@ function update(timestamp) {
         velocityY = initialVelocityY;
         doodler.setImg(doodlerDefault);
         movePlatforms = true; // enable platform movement
-      }
+      } else if (detectCollision(doodler, p) && p.isBroken() && velocityY >= 1) {
+        //if detects collision and platform is broken - break it.
+        startBreakPlatform = true;
+        platfromsToBreak.push(p);
+        }
       //draw each platform from array
-      context.drawImage(p.getImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
+      context.drawImage(p.getImg(), p.getX(), p.getY(), p.getImg().naturalWidth, p.getImg().naturalHeight);
     })
     
+    //break selected platforms
+    if (startBreakPlatform && platfromsToBreak.length > 0) {
+      platfromsToBreak.forEach(p => breakPlatform(p, deltaTime));
+    }
+
     if (movePlatforms) {
       if (velocityY < 0 && doodler.getY() < board.getHeight() / 2) {
       // move platforms downward as the doodler rises above the screen's midpoint
@@ -277,20 +297,35 @@ function detectCollision(a, b) {
 // ANIMATIONS
 
 //main
-function animate(spriteList, spriteCount, frameSpeed) {
+function animate(object, spriteList, spriteCount, frameSpeed) {
   // (frameSpeed): визначає, скільки кадрів анімація буде залишатися
   // на одному спрайті перед переключенням на наступний.
   if (spriteCount >= spriteList.length * frameSpeed) {
     spriteCount = 0;
   }
-  const frameIndex = Math.floor(spriteCount / frameSpeed);
-  doodler.setImg(spriteList[frameIndex]); 
+  const spriteIndex = Math.floor(spriteCount / frameSpeed);
+  const currentSprite = spriteList[spriteIndex];
+  object.setImg(currentSprite); 
   return spriteCount + 1;
 }
 
 //falling anim
 function falling() {
   if (velocityY > 120) {
-   fallingSpriteCount = animate(fallingSprites, fallingSpriteCount, 25)
+   fallingSpriteCount = animate(doodler, fallingSprites, fallingSpriteCount, 25)
   }
+}
+
+//broke platform anim
+function breakPlatform(platform, deltaTime) {
+    if (platform.getImg() !== breakingSprites[breakingSprites.length - 1]) {
+    breakingSpriteCount = animate(platform, breakingSprites, breakingSpriteCount, 1);
+    }
+    if (platform.getImg() == breakingSprites[breakingSprites.length - 1]) {
+      platform.setY(platform.getY() + 100 * deltaTime);
+    }
+    if (platform.getY() > board.getHeight()) {
+      platformArray = platformArray.filter(p => p !== platform);
+      platfromsToBreak = platfromsToBreak.filter(p => p !== platform);
+    }
 }

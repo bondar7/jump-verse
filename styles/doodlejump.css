@@ -1,6 +1,6 @@
 @font-face {
-  font-family: "KaushanScript-Regular";
-  src: url("../fonts/KaushanScript-Regular.otf") format('opentype');
+  font-family: "Recoleta-RegularDEMO";
+  src: url("../fonts/Recoleta-RegularDEMO.otf") format('opentype');
 }
 
 body {
@@ -34,7 +34,11 @@ body {
 #score {
   margin-left: 10px;
   font-size: 30px;
-  font-family: "KaushanScript-Regular", sans-serif;
+  font-weight: bold;
+  font-family: "Recoleta-RegularDEMO", sans-serif;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 #board {

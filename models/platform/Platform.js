@@ -1,13 +1,9 @@
 export default class Platform {
-  #width;
-  #height;
   #x;
   #y;
   #img;
   #isBroken;
   constructor(x, y, img, isBroken) {
-    this.#width = 87;
-    this.#height = 17;
     this.#x = x;
     this.#y = y; 
     this.#img = img;
@@ -31,10 +27,10 @@ export default class Platform {
   
     // Width, Height
     getWidth() {
-      return this.#width;
+      return this.#img.naturalWidth;
     }
     getHeight() {
-      return this.#height;
+      return this.#img.naturalHeight;
     }
     
     // Image
