@@ -84,6 +84,21 @@ export function movePlatformsDown(score, deltaTime) {
   }
 }
 
+export function movePlatformsUp(deltaTime) {
+  platformArray.forEach((p,i) => {
+    p.setY(p.getY() - Math.abs(velocityY) * deltaTime);
+    if (p.getY() < 0) {
+      platformArray.splice(i, 1);
+      console.log(platformArray);
+    }
+  })
+  if (doodler.getY() > board.getHeight() / 2 && platformArray.length > 0) {
+    doodler.setY(doodler.getY() - 700 * deltaTime);
+  } else {
+    doodler.setY(doodler.getY() + 700 * deltaTime);
+  }
+}
+
 export function newPlatform() {
   // space between platforms should be random (#TODO)
   
