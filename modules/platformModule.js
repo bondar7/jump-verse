@@ -89,7 +89,6 @@ export function movePlatformsUp(deltaTime) {
     p.setY(p.getY() - Math.abs(velocityY) * deltaTime);
     if (p.getY() < 0) {
       platformArray.splice(i, 1);
-      console.log(platformArray);
     }
   })
   if (doodler.getY() > board.getHeight() / 2 && platformArray.length > 0) {
