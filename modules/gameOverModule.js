@@ -12,6 +12,8 @@ const gameOverHeight = 100;
 
 const playAgainImage = new Image();
 playAgainImage.src = "./assets/buttons/playagain.png";
+const playAgainImageRed = new Image();
+playAgainImageRed.src = "./assets/buttons/playagain-red.png";
 const playAgainBtn = {
   image: playAgainImage,
   width: 170,
@@ -81,12 +83,18 @@ function handleRestartClick(event) {
     clickY >= playAgainBtn.y &&
     clickY <= playAgainBtn.y + playAgainBtn.height
   ) {
-    restartGame();
+    playAgainBtn.image = playAgainImageRed;
+    setTimeout(() => {
+      restartGame();
+    }, 110); 
+  } else {
+    playAgainBtn.image = playAgainImage;
   }
 }
 
 function restartGame() {
   context.clearRect(0,0,board.getWidth(), board.getHeight()); // clear entire canvas
+  playAgainBtn.image = playAgainImage; // set default image for restart btn
   restart(); // reset doodler's velocity x and y
   doodler.setY(board.getHeight() - 125); // set default Y
   doodler.setX(board.getWidth()/2 + 15); // set default X
