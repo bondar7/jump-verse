@@ -14,10 +14,9 @@ const playAgainImage = new Image();
 playAgainImage.src = "./assets/buttons/playagain.png";
 const playAgainBtn = {
   image: playAgainImage,
-  width: 150,
-  height: 50,
-  y: null,
-  x: canvas.width / 2 - 150 / 2
+  width: 170,
+  height: 61,
+  x: canvas.width / 2 - 55
 }
 
 let gameOverY = board.getHeight();
@@ -29,7 +28,7 @@ export function gameOver(deltaTime, score ) {
   if (platformArray.length == 0) {
     if (gameOverY > targetY) {
       gameOverY -= animSpeed * deltaTime;
-      playAgainBtn.y = gameOverY + 190;
+      playAgainBtn.y = gameOverY + 265;
       canvas.addEventListener("click", handleRestartClick)
     }
     displayGameOver(score);
@@ -40,7 +39,7 @@ export function gameOver(deltaTime, score ) {
 
 function displayGameOver(score) {
   const centerX = canvas.width / 2;
-  const fontSize = 24;
+  const fontSize = 35;
   const fontColor = "black";
 
   // Clear canvas
@@ -50,9 +49,9 @@ function displayGameOver(score) {
   context.drawImage(gameOverImage, centerX - gameOverWidth / 2, gameOverY, gameOverWidth, gameOverHeight);
 
   // Score Texts
-  drawCenteredText(`your score: ${score}`, centerX, gameOverY + 120, fontSize, fontColor);
-  drawCenteredText("your high score: 17556", centerX, gameOverY + 140, fontSize, fontColor);
-  drawCenteredText("your name: Doodler", centerX, gameOverY + 160, fontSize, fontColor);
+  drawCenteredText(`your score: ${score}`, centerX, gameOverY + 140, fontSize, fontColor);
+  drawCenteredText("your high score: 17556", centerX, gameOverY + 175, fontSize, fontColor);
+  drawCenteredText("your name: Doodler", centerX, gameOverY + 210, fontSize, fontColor);
 
   context.drawImage(
     playAgainBtn.image, 
