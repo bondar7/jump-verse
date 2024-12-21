@@ -4,7 +4,6 @@ import { doodler, restart } from "./doodlerModule.js";
 import { movePlatformsUp, platformArray, createPlatforms } from "./platformModule.js";
 
 export let isGameOver = false;
-export let gameRestarted = false;
 
 const gameOverImage = new Image();
 gameOverImage.src = "./assets/game-over.png";
