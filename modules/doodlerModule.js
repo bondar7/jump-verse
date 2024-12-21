@@ -114,3 +114,8 @@ export function controlXPosition() {
 export function fallingAnim() {
   animModule.falling(doodler, velocityY);
 }
+
+export function restart() {
+  reset();
+  velocityX = 0;
+}

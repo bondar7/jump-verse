@@ -1,5 +1,10 @@
+import { score } from "../scripts/doodlejump.js";
 import { board, canvas, context } from "./boardModule.js";
-import { movePlatformsUp, platformArray } from "./platformModule.js";
+import { doodler, restart } from "./doodlerModule.js";
+import { movePlatformsUp, platformArray, createPlatforms } from "./platformModule.js";
+
+export let isGameOver = false;
+export let gameRestarted = false;
 
 const gameOverImage = new Image();
 gameOverImage.src = "./assets/game-over.png";
@@ -8,30 +13,33 @@ const gameOverHeight = 100;
 
 const playAgainImage = new Image();
 playAgainImage.src = "./assets/buttons/playagain.png";
-const restartBtnWidth = 150;
-const restartBtnHeight = 50;
+const playAgainBtn = {
+  image: playAgainImage,
+  width: 150,
+  height: 50,
+  y: null,
+  x: canvas.width / 2 - 150 / 2
+}
 
 let gameOverY = board.getHeight();
-let targetY = board.getHeight() / 2 - 100;
+let targetY = board.getHeight() / 2 - 150;
 let animSpeed = 850;
-let restartBtnY;
-let restartBtnX = canvas.width / 2 - restartBtnWidth / 2;
 
-export function gameOver(deltaTime) {
+export function gameOver(deltaTime, score ) {
   movePlatformsUp(deltaTime);
   if (platformArray.length == 0) {
     if (gameOverY > targetY) {
       gameOverY -= animSpeed * deltaTime;
-      restartBtnY = gameOverY + 190;
+      playAgainBtn.y = gameOverY + 190;
       canvas.addEventListener("click", handleRestartClick)
     }
-    displayGameOver(gameOverY);
+    displayGameOver(score);
   } else {
     context.clearRect(0, 0, board.getWidth(), board.getHeight());
   }
 }
 
-function displayGameOver(gameOverY) {
+function displayGameOver(score) {
   const centerX = canvas.width / 2;
   const fontSize = 24;
   const fontColor = "black";
@@ -43,11 +51,16 @@ function displayGameOver(gameOverY) {
   context.drawImage(gameOverImage, centerX - gameOverWidth / 2, gameOverY, gameOverWidth, gameOverHeight);
 
   // Score Texts
-  drawCenteredText("your score: 319", centerX, gameOverY + 120, fontSize, fontColor);
+  drawCenteredText(`your score: ${score}`, centerX, gameOverY + 120, fontSize, fontColor);
   drawCenteredText("your high score: 17556", centerX, gameOverY + 140, fontSize, fontColor);
   drawCenteredText("your name: Doodler", centerX, gameOverY + 160, fontSize, fontColor);
 
-  context.drawImage(playAgainImage, restartBtnX, restartBtnY, restartBtnWidth, restartBtnHeight);
+  context.drawImage(
+    playAgainBtn.image, 
+    playAgainBtn.x, 
+    playAgainBtn.y,
+    playAgainBtn.width,
+    playAgainBtn.height);
 }
 
 // Draw text with center alignment
@@ -65,15 +78,26 @@ function handleRestartClick(event) {
   const clickY = event.clientY - rect.top;
 
   if (
-    clickX >= restartBtnX &&
-    clickX <= restartBtnX + restartBtnWidth &&
-    clickY >= restartBtnY &&
-    clickY <= restartBtnY + restartBtnHeight
+    clickX >= playAgainBtn.x &&
+    clickX <= playAgainBtn.x + playAgainBtn.width &&
+    clickY >= playAgainBtn.y &&
+    clickY <= playAgainBtn.y + playAgainBtn.height
   ) {
     restartGame();
   }
 }
 
 function restartGame() {
-  location.reload();  
+  context.clearRect(0,0,board.getWidth(), board.getHeight()); // clear entire canvas
+  restart(); // reset doodler's velocity x and y
+  doodler.setY(board.getHeight() - 125); // set default Y
+  doodler.setX(board.getWidth()/2 + 15); // set default X
+  gameOverY = board.getHeight(); // reset for an animation
+  score.innerHTML = 0; // reset score
+  setGameOver(false); // game over false for game loop
+  createPlatforms(); // create start platforms
+}
+
+export function setGameOver(value) {
+  isGameOver = value;
 }

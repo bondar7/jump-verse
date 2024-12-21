@@ -4,13 +4,10 @@ import {board, context} from "../modules/boardModule.js";
 import * as platformModule from "../modules/platformModule.js";
 import {movePlatforms} from "../modules/platformModule.js"
 import {platformArray} from "../modules/platformModule.js"
-import { gameOver } from "../modules/gameOverModule.js";
+import { gameOver, isGameOver, setGameOver } from "../modules/gameOverModule.js";
 
 //score
-const score = document.getElementById("score");
-
-//the game end
-let isGameOver = false;
+export const score = document.getElementById("score");
 
 //for different refresh rates
 let lastTimestamp = null;
@@ -45,9 +42,9 @@ function update(timestamp) {
   let deltaTime = (timestamp - lastTimestamp) / 1000; // Convert milliseconds to seconds
   lastTimestamp = timestamp; // Update the lastTimestamp for the next frame
   
-  if(isGameOver) {
+  if(isGameOver) { 
     //if it's game over display needed elements
-    gameOver(deltaTime);
+    gameOver(deltaTime, score.innerHTML);
   } else {
     //clear canvas
     context.clearRect(0, 0, board.getWidth(), board.getHeight());
@@ -84,6 +81,6 @@ function update(timestamp) {
     doodlerModule.drawDoodler(context);
 
     if (doodler.getY() >= board.getHeight()) {
-      isGameOver = true;
+      setGameOver(true);
     }
   }

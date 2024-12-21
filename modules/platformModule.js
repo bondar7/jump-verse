@@ -22,7 +22,7 @@ brokenPlatform.src = "../assets/platforms/broken-platform.png";
 export function createPlatforms() {
   platformArray = [];
 
-  platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform));
+  platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform, false));
 
   // space between platforms should be random (#TODO)
 
