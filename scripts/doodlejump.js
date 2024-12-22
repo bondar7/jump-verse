@@ -8,6 +8,8 @@ import { gameOver, isGameOver, setGameOver } from "../modules/gameOverModule.js"
 
 //score
 export const score = document.getElementById("score");
+export let highestScore = 
+      JSON.parse(localStorage.getItem("highestScore")) || 0;
 
 //for different refresh rates
 let lastTimestamp = null;
@@ -44,7 +46,7 @@ function update(timestamp) {
   
   if(isGameOver) { 
     //if it's game over display needed elements
-    gameOver(deltaTime, score.innerHTML);
+    gameOver(deltaTime);
   } else {
     //clear canvas
     context.clearRect(0, 0, board.getWidth(), board.getHeight());
@@ -84,5 +86,12 @@ function update(timestamp) {
 
     if (doodler.getY() >= board.getHeight()) {
       setGameOver(true);
+    }
+  }
+
+  export function updateHighestScore() {
+    if (parseInt(score.innerHTML) > highestScore) {
+      highestScore = parseInt(score.innerHTML);
+      localStorage.setItem("highestScore", JSON.stringify(highestScore));
     }
   }

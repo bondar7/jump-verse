@@ -1,4 +1,4 @@
-import { score } from "../scripts/doodlejump.js";
+import { score, highestScore, updateHighestScore } from "../scripts/doodlejump.js";
 import { board, canvas, context } from "./boardModule.js";
 import { doodler, restart } from "./doodlerModule.js";
 import { movePlatformsUp, platformArray, createPlatforms } from "./platformModule.js";
@@ -25,21 +25,22 @@ let gameOverY = board.getHeight();
 let targetY = board.getHeight() / 2 - 150;
 let animSpeed = 850;
 
-export function gameOver(deltaTime, score ) {
+export function gameOver(deltaTime) {
   movePlatformsUp(deltaTime);
+  updateHighestScore();
   if (platformArray.length == 0) {
     if (gameOverY > targetY) {
       gameOverY -= animSpeed * deltaTime;
       playAgainBtn.y = gameOverY + 265;
       canvas.addEventListener("click", handleRestartClick)
     }
-    displayGameOver(score);
+    displayGameOver();
   } else {
     context.clearRect(0, 0, board.getWidth(), board.getHeight());
   }
 }
 
-function displayGameOver(score) {
+function displayGameOver() {
   const centerX = canvas.width / 2;
   const fontSize = 35;
   const fontColor = "black";
@@ -51,8 +52,8 @@ function displayGameOver(score) {
   context.drawImage(gameOverImage, centerX - gameOverWidth / 2, gameOverY, gameOverWidth, gameOverHeight);
 
   // Score Texts
-  drawCenteredText(`your score: ${score}`, centerX, gameOverY + 140, fontSize, fontColor);
-  drawCenteredText("your high score: 17556", centerX, gameOverY + 175, fontSize, fontColor);
+  drawCenteredText(`your score: ${score.innerHTML}`, centerX, gameOverY + 140, fontSize, fontColor);
+  drawCenteredText(`your high score: ${highestScore}`, centerX, gameOverY + 175, fontSize, fontColor);
   drawCenteredText("your name: Doodler", centerX, gameOverY + 210, fontSize, fontColor);
 
   context.drawImage(
@@ -99,6 +100,7 @@ function restartGame() {
   doodler.setY(board.getHeight() - 125); // set default Y
   doodler.setX(board.getWidth()/2 + 15); // set default X
   gameOverY = board.getHeight(); // reset for an animation
+  updateHighestScore(); // update highest score
   score.innerHTML = 0; // reset score
   setGameOver(false); // game over false for game loop
   createPlatforms(); // create start platforms
