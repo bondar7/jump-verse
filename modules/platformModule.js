@@ -22,29 +22,39 @@ brokenPlatform.src = "../assets/platforms/broken-platform.png";
 export function createPlatforms() {
   platformArray = [];
 
+  // starting platform
   platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform, false));
 
-  // space between platforms should be random (#TODO)
+  let lastPlatformY = board.getHeight() - 70;
+
+  const minGap = 25;
+  const maxGap = 70;
 
   for (let i = 0; i < 14; i++) {
     let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
+    let randomGap = Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap;
+    let randomY = lastPlatformY - randomGap;
+
     if (Math.random() < 0.18) {
       platformArray.push(new Platform(
         randomX,
-        board.getHeight() - 50*i - 185, 
+        // board.getHeight() - 50*i - 185, 
+        randomY,
         brokenPlatform,
         true
       ));
     } else {
       platformArray.push(new Platform(
         randomX,
-        board.getHeight() - 50*i - 185, 
+        // board.getHeight() - 50*i - 185, 
+        randomY,
         standartPlatform,
         false
     ));
   }
+  lastPlatform = platformArray.at(-1);
+  lastPlatformY = lastPlatform.getY();
  }
-  lastPlatform = platformArray[platformArray.length - 1];
 }
 
 export function checkCollision() {
@@ -99,20 +109,24 @@ export function movePlatformsUp(deltaTime) {
 }
 
 export function newPlatform() {
-  // space between platforms should be random (#TODO)
+  const minGap = 30;
+  const maxGap = 80;
   
   let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
+  let randomGap = Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap;
+  let randomY = lastPlatform.getY() - randomGap;
+
   if (Math.random() < 0.18 && !lastPlatform.isBroken()) {
     platformArray.push(new Platform(
       randomX,
-      -17, // needs fix
+      randomY,
       brokenPlatform,
       true
     ));
   } else {
     platformArray.push(new Platform(
       randomX,
-      -17, // needs fix
+      randomY,
       standartPlatform,
       false
     ));

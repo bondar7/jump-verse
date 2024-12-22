@@ -72,9 +72,11 @@ function update(timestamp) {
     }
 
     //remove platforms that go off-screen and add new ones
-    if(platformArray.length > 0 && platformArray[0].getY() > board.getHeight()) {
+    if (platformArray.length > 0 && platformArray[0].getY() > board.getHeight()) {
       platformArray.splice(0, 1);
-      if (!isGameOver) platformModule.newPlatform();
+    }
+    if (!isGameOver && platformArray.length < 35 && platformArray[0].getY() > board.getHeight() - 50) {
+      platformModule.newPlatform();
     }
     
     //draw doodler after platforms
