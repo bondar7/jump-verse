@@ -2,7 +2,7 @@ import {context, board} from "../modules/boardModule.js";
 import { detectCollision } from "./utils/collision.js";
 import { reset } from "./doodlerModule.js";
 import * as animModule from "./animationModule.js"
-import Platform from "../models/platform/Platform.js";
+import {StandartPlatform, BrokenPlatform, MovablePlatform} from "../models/platform/Platform.js";
 import { doodler, velocityY } from "./doodlerModule.js";
 
 export let platformArray;
@@ -23,7 +23,7 @@ export function createPlatforms() {
   platformArray = [];
 
   // starting platform
-  platformArray.push(new Platform(board.getWidth()/2, board.getHeight() - 70, standartPlatform, false));
+  platformArray.push(new StandartPlatform(board.getWidth()/2, board.getHeight() - 70));
 
   let lastPlatformY = board.getHeight() - 70;
 
@@ -36,20 +36,14 @@ export function createPlatforms() {
     let randomY = lastPlatformY - randomGap;
 
     if (Math.random() < 0.18) {
-      platformArray.push(new Platform(
+      platformArray.push(new BrokenPlatform(
         randomX,
-        // board.getHeight() - 50*i - 185, 
         randomY,
-        brokenPlatform,
-        true
       ));
     } else {
-      platformArray.push(new Platform(
+      platformArray.push(new StandartPlatform(
         randomX,
-        // board.getHeight() - 50*i - 185, 
         randomY,
-        standartPlatform,
-        false
     ));
   }
   lastPlatform = platformArray.at(-1);
@@ -59,16 +53,16 @@ export function createPlatforms() {
 
 export function checkCollision() {
   platformArray.forEach((p) => {
-    if (detectCollision(doodler, p) && velocityY >= 1 && !p.isBroken()) {
+    if (detectCollision(doodler, p) && velocityY >= 1 && !(p instanceof BrokenPlatform)) {
       reset(); // set default doodler image and reset velocityY;
       movePlatforms = true; // enable platform movement
-    } else if (detectCollision(doodler, p) && p.isBroken() && velocityY >= 1) {
+    } else if (detectCollision(doodler, p) && p instanceof BrokenPlatform && velocityY >= 1) {
       //if detects collision and platform is broken - break it.
       startBreakPlatform = true;
       platfromsToBreak.push(p);
       }
     //draw each platform from array
-    context.drawImage(p.getImg(), p.getX(), p.getY(), p.getImg().naturalWidth, p.getImg().naturalHeight);
+    context.drawImage(p.getImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
   })
 }
 
@@ -110,11 +104,8 @@ export function movePlatformsUp(deltaTime) {
 
 export function moveMovablePlatforms(deltaTime) {
   platformArray.forEach(p => {
-    if (p.isMovable()) {
-      if (!p.direction) p.direction = 1;
-
-      p.setX(p.getX() + p.direction * 150 * deltaTime)
-
+    if (p instanceof MovablePlatform) {
+      p.setX(p.getX() + p.direction * 85 * deltaTime)
       if (p.getX() >= board.getWidth() - p.getWidth()) {
         p.direction = -1;
       } 
@@ -132,30 +123,21 @@ export function newPlatform() {
   let randomX = Math.floor(Math.random() * board.getWidth()*3/4); // (0-1) * boardWidth * 3/4
   let randomGap = Math.floor(Math.random() * (maxGap - minGap + 1)) + minGap;
   let randomY = lastPlatform.getY() - randomGap;
-
-  if (Math.random() < 0.18 && !lastPlatform.isBroken()) {
-    platformArray.push(new Platform(
+  
+  if (Math.random() < 0.18 && !(lastPlatform instanceof BrokenPlatform)) {
+    platformArray.push(new BrokenPlatform(
       randomX,
-      randomY,
-      brokenPlatform,
-      true,
-      false
+      randomY
     ));
   } else if (Math.random() > 0.90) {
-    platformArray.push(new Platform(
+    platformArray.push(new MovablePlatform(
       randomX,
-      randomY,
-      standartPlatform,
-      false,
-      true
+      randomY
     ));
   } else {
-    platformArray.push(new Platform(
+    platformArray.push(new StandartPlatform(
       randomX,
-      randomY,
-      standartPlatform,
-      false,
-      false
+      randomY
     ));
   }
   lastPlatform = platformArray[platformArray.length - 1];

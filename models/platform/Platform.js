@@ -1,17 +1,11 @@
-export default class Platform {
+class Platform {
   #x;
   #y;
   #img;
-  #isBroken;
-  #isMovable;
-  direction
-  constructor(x, y, img, isBroken, isMovable, direction) {
+  constructor(x, y, img) {
     this.#x = x;
     this.#y = y; 
     this.#img = img;
-    this.#isBroken = isBroken;
-    this.#isMovable = isMovable
-    this.direction = direction;
   }
     // Get position
     getX() {
@@ -44,20 +38,33 @@ export default class Platform {
     getImg() {
       return this.#img;
     }
+}
 
-    // is broken platform
-    setIsBroken(value) {
-      this.#isBroken = value;
-    }
-    isBroken() {
-      return this.#isBroken;
-    }
+export class StandartPlatform extends Platform {
+  constructor(x, y) {
+    const img = new Image();
+    img.src = "../assets/platforms/standart-platform.png";
 
-    // is movable platform
-    setIsMovable(value) {
-      this.#isMovable = value;
-    }
-    isMovable() {
-      return this.#isMovable;
-    }
+    super(x, y, img);
+  }
+}
+
+export class BrokenPlatform extends Platform {
+  constructor(x, y) {
+    const img = new Image();
+    img.src = "../assets/platforms/broken-platform.png";
+
+    super(x, y, img);
+  }
+}
+
+export class MovablePlatform extends Platform {
+  direction;
+  constructor(x, y) {
+    const img = new Image();
+    img.src = "../assets/platforms/movable-platform.png"
+
+    super(x, y, img);
+    this.direction = 1;
+  }
 }
