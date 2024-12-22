@@ -86,7 +86,7 @@ function handleRestartClick(event) {
     playAgainBtn.image = playAgainImageRed;
     setTimeout(() => {
       restartGame();
-    }, 110); 
+    }, 110);   
   } else {
     playAgainBtn.image = playAgainImage;
   }
