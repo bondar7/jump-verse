@@ -108,6 +108,23 @@ export function movePlatformsUp(deltaTime) {
   }
 }
 
+export function moveMovablePlatforms(deltaTime) {
+  platformArray.forEach(p => {
+    if (p.isMovable()) {
+      if (!p.direction) p.direction = 1;
+
+      p.setX(p.getX() + p.direction * 150 * deltaTime)
+
+      if (p.getX() >= board.getWidth() - p.getWidth()) {
+        p.direction = -1;
+      } 
+      if (p.getX() <= 0){
+        p.direction = 1;
+      }
+    }
+  })
+}
+
 export function newPlatform() {
   const minGap = 30;
   const maxGap = 80;
@@ -121,6 +138,15 @@ export function newPlatform() {
       randomX,
       randomY,
       brokenPlatform,
+      true,
+      false
+    ));
+  } else if (Math.random() > 0.90) {
+    platformArray.push(new Platform(
+      randomX,
+      randomY,
+      standartPlatform,
+      false,
       true
     ));
   } else {
@@ -128,6 +154,7 @@ export function newPlatform() {
       randomX,
       randomY,
       standartPlatform,
+      false,
       false
     ));
   }

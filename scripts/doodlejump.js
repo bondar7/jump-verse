@@ -68,6 +68,9 @@ function update(timestamp) {
     //move platforms
     platformModule.movePlatformsDown(score, deltaTime);
 
+    //move only movable platforms by x
+    platformModule.moveMovablePlatforms(deltaTime);
+
     if ((!movePlatforms || doodler.getY() >= board.getHeight() / 2) && !isGameOver) {
       // move the doodler if it's below the screen's midpoint
       doodlerModule.moveDoodlerY(deltaTime) // scaled by deltaTime
@@ -87,6 +90,8 @@ function update(timestamp) {
     if (doodler.getY() >= board.getHeight()) {
       setGameOver(true);
     }
+
+    
   }
 
   export function updateHighestScore() {
