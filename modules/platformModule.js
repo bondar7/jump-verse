@@ -1,23 +1,22 @@
 import {context, board} from "../modules/boardModule.js";
 import { detectCollision } from "./utils/collision.js";
-import { reset } from "./doodlerModule.js";
+import { reset, resetForSpring } from "./doodlerModule.js";
 import * as animModule from "./animationModule.js"
 import {StandartPlatform, BrokenPlatform, MovablePlatform} from "../models/platform/Platform.js";
 import { doodler, velocityY } from "./doodlerModule.js";
+import Spring from "../models/spring/Spring.js";
 
 export let platformArray;
 export let movePlatforms = false;
 let lastPlatform;
-let standartPlatform;
-let brokenPlatform;
 let startBreakPlatform = false;
 export let platfromsToBreak = [];
 
-//load sprites
-standartPlatform = new Image();
-standartPlatform.src = "../assets/platforms/standart-platform.png";
-brokenPlatform = new Image();
-brokenPlatform.src = "../assets/platforms/broken-platform.png";
+//springs
+let springImg = new Image();
+let springCompImg = new Image();
+springImg.src = "../assets/spring/spring.png";
+springCompImg.src = "../assets/spring/spring-comp.png";
 
 export function createPlatforms() {
   platformArray = [];
@@ -53,6 +52,16 @@ export function createPlatforms() {
 
 export function checkCollision() {
   platformArray.forEach((p) => {
+    if (p.spring
+       && detectCollision(doodler, p.spring) 
+       && velocityY >= 1 
+       && !(p instanceof BrokenPlatform)) 
+       {
+        p.spring.useSpring(p);
+        resetForSpring();
+        movePlatforms = true;
+      } else {
+
     if (detectCollision(doodler, p) && velocityY >= 1 && !(p instanceof BrokenPlatform)) {
       reset(); // set default doodler image and reset velocityY;
       movePlatforms = true; // enable platform movement
@@ -63,6 +72,11 @@ export function checkCollision() {
       }
     //draw each platform from array
     context.drawImage(p.getImg(), p.getX(), p.getY(), p.getWidth(), p.getHeight());
+    //draw springs
+    if (p instanceof StandartPlatform && p.spring) {
+      context.drawImage(p.spring.getImg(), p.spring.getX(), p.spring.getY(), p.spring.getWidth(), p.spring.getHeight());
+    }
+  }
   })
 }
 
@@ -78,6 +92,13 @@ export function movePlatformsDown(score, deltaTime) {
     // move platforms downward as the doodler rises above the screen's midpoint
     platformArray.forEach(p => {
       p.setY(p.getY() + Math.abs(velocityY) * deltaTime);
+      if (p.spring) {
+        if (p.spring.getImg().src === springCompImg.src) {
+            p.spring.setY(p.getY() - 21); // Keep relative offset
+        } else if (p.spring.getImg().src === springImg.src) {
+            p.spring.setY(p.getY() - 40); // Keep relative offset
+        }
+    }
     })
     // update score
     score.innerHTML = parseInt(score.innerHTML) + 1;
@@ -91,6 +112,13 @@ export function movePlatformsDown(score, deltaTime) {
 export function movePlatformsUp(deltaTime) {
   platformArray.forEach((p,i) => {
     p.setY(p.getY() - Math.abs(velocityY) * deltaTime);
+    if (p.spring) {
+      if (p.spring.getImg().src === springCompImg.src) {
+          p.spring.setY(p.getY() - 21); // Keep relative offset
+      } else if (p.spring.getImg().src === springImg.src) {
+          p.spring.setY(p.getY() - 40); // Keep relative offset
+      }
+  }
     if (p.getY() < 0) {
       platformArray.splice(i, 1);
     }
@@ -135,10 +163,23 @@ export function newPlatform() {
       randomY
     ));
   } else {
-    platformArray.push(new StandartPlatform(
-      randomX,
-      randomY
-    ));
+    if(Math.random() < 0.11) {
+      const maxSpringX = randomX + 55;
+      const randomSpringX = Math.floor(Math.random() * (maxSpringX - randomX + 1)) + randomX;
+      const springY = randomY - 21;
+      
+      platformArray.push(new StandartPlatform(
+        randomX,
+        randomY,
+        new Spring(randomSpringX, springY)
+      ))
+    } 
+    else {
+      platformArray.push(new StandartPlatform(
+        randomX,
+        randomY
+      ));
+    }
   }
   lastPlatform = platformArray[platformArray.length - 1];
 }

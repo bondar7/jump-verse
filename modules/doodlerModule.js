@@ -72,6 +72,11 @@ export function reset() {
   doodler.setImg(doodlerDefault);
 }
 
+export function resetForSpring() {
+  velocityY = -1200;
+  doodler.setImg(doodlerDefault);
+}
+
 //set key listeners to move doodler
 export function setKeyListeners() {
   document.addEventListener("keydown", moveDoodlerX);

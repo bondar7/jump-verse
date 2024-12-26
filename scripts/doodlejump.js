@@ -59,7 +59,7 @@ function update(timestamp) {
   doodlerModule.fallingAnim(); //doodler's falling animation
   doodlerModule.increaseVelocityY(deltaTime); //jump physics (move up or down)
     
-    //check collision
+    //check collision and draw all platforms at the same time
     platformModule.checkCollision();
     
     //break selected platforms
@@ -90,8 +90,6 @@ function update(timestamp) {
     if (doodler.getY() >= board.getHeight()) {
       setGameOver(true);
     }
-
-    
   }
 
   export function updateHighestScore() {

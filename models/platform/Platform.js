@@ -41,11 +41,13 @@ class Platform {
 }
 
 export class StandartPlatform extends Platform {
-  constructor(x, y) {
+  spring;
+  constructor(x, y, spring = null) {
     const img = new Image();
     img.src = "../assets/platforms/standart-platform.png";
 
     super(x, y, img);
+    this.spring = spring;
   }
 }
 
