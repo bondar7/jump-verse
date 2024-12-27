@@ -18,9 +18,6 @@ window.onload = () => {
   //load sprites for doodle
   doodlerModule.loadSprites(context);
 
-  //create start platforms
-  platformModule.createPlatforms();
-
   //start gameloop
   requestAnimationFrame(update);  
 
@@ -46,7 +43,6 @@ function update(timestamp) {
   
   // Calculate the time difference (deltaTime) between frames in seconds
   let deltaTime = (timestamp - lastTimestamp) / 1000; // Convert milliseconds to seconds
-  console.log(deltaTime);
   
   deltaTime = Math.min(deltaTime, 0.0085);
   lastTimestamp = timestamp; // Update the lastTimestamp for the next frame
@@ -84,7 +80,7 @@ function update(timestamp) {
     if (platformArray.length > 0 && platformArray[0].getY() > board.getHeight()) {
       platformArray.splice(0, 1);
     }
-    if (!isGameOver && platformArray.length < 35 && platformArray[0].getY() > board.getHeight() - 50) {
+    if (!isGameOver && platformArray.length < 35) {
       platformModule.newPlatform();
     }
   }

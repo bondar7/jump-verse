@@ -3,6 +3,8 @@ import { detectCollision } from "../modules/utils/collision.js";
 import { context, canvas, board } from "./boardModule.js";
 import * as doodlerModule from "./doodlerModule.js"
 import { doodler } from "./doodlerModule.js";
+import { createPlatforms } from "./platformModule.js";
+import { showTopbar } from "./utils/topbar.js";
 
 export let isStart = true;
 
@@ -88,9 +90,15 @@ export function playBtnListener(event) {
       setTimeout(() => {
         isStart = false;
         doodlerModule.setDoodlerPositionForGame();
-        document.getElementById("top-bar").classList.remove("hide");
+        doodlerModule.reset();
+        showTopbar();
+        createPlatforms(); // create start platforms
       }, 110);   
     } else {
       playBtn.img = playBtnImg;
     }
+}
+
+export function setStart(value) {
+  isStart = value;
 }

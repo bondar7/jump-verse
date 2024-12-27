@@ -1,7 +1,9 @@
 import { score, highestScore, updateHighestScore } from "../scripts/doodlejump.js";
 import { board, canvas, context } from "./boardModule.js";
-import { doodler, drawDoodler, fallingAnim, increaseVelocityY, restart } from "./doodlerModule.js";
+import { doodler, drawDoodler, fallingAnim, increaseVelocityY, restart, setDoodlerPositionForStart } from "./doodlerModule.js";
+import { setStart } from "./gameStartModule.js";
 import { movePlatformsUp, platformArray, createPlatforms, checkCollision } from "./platformModule.js";
+import { hideTopbar, resetScore } from "./utils/topbar.js";
 
 export let isGameOver = false;
 
@@ -20,6 +22,16 @@ const playAgainBtn = {
   height: 61,
   x: canvas.width / 2 - 55
 }
+const menuImage = new Image();
+menuImage.src = "./assets/buttons/menu.png";
+const menuRedImage = new Image();
+menuRedImage.src = "./assets/buttons/menu-red.png";
+const menuBtn = {
+  image: menuImage,
+  width: 170,
+  height: 61,
+  x: canvas.width / 2 + 50
+}
 
 let gameOverY = board.getHeight();
 let targetY = board.getHeight() / 2 - 150;
@@ -33,7 +45,8 @@ export function gameOver(deltaTime) {
     if (gameOverY > targetY) {
       gameOverY -= animSpeed * deltaTime;
       playAgainBtn.y = gameOverY + 265;
-      canvas.addEventListener("click", handleRestartClick)
+      menuBtn.y = gameOverY + 350;
+      canvas.addEventListener("click", handleClicks);
     }
     displayGameOver();
   } else {
@@ -63,6 +76,12 @@ function displayGameOver() {
     playAgainBtn.y,
     playAgainBtn.width,
     playAgainBtn.height);
+  context.drawImage(
+    menuBtn.image, 
+    menuBtn.x, 
+    menuBtn.y,
+    menuBtn.width,
+    menuBtn.height);
 }
 
 // Draw text with center alignment
@@ -73,7 +92,7 @@ function drawCenteredText(text, x, y, fontSize, color) {
   context.fillText(text, x, y);
 }
 
-function handleRestartClick(event) {
+function handleClicks(event) {
   // Get mouse click coordinates relative to the canvas
   const rect = canvas.getBoundingClientRect();
   const clickX = event.clientX - rect.left;
@@ -92,6 +111,20 @@ function handleRestartClick(event) {
   } else {
     playAgainBtn.image = playAgainImage;
   }
+
+  if (
+    clickX >= menuBtn.x &&
+    clickX <= menuBtn.x + menuBtn.width &&
+    clickY >= menuBtn.y &&
+    clickY <= menuBtn.y + menuBtn.height
+  ) {
+    menuBtn.image = menuRedImage;
+    setTimeout(() => {
+      openMenu();
+    }, 110);   
+  } else {
+    menuBtn.image = menuImage;
+  }
 }
 
 function restartGame() {
@@ -102,9 +135,20 @@ function restartGame() {
   doodler.setX(board.getWidth()/2 + 15); // set default X
   gameOverY = board.getHeight(); // reset for an animation
   updateHighestScore(); // update highest score
-  score.innerHTML = 0; // reset score
+  resetScore(); // reset score
   setGameOver(false); // game over false for game loop
   createPlatforms(); // create start platforms
+}
+
+function openMenu() {
+  menuBtn.image = menuRedImage;
+  setStart(true);
+  setGameOver(false)
+  restart();
+  setDoodlerPositionForStart();
+  hideTopbar();
+  resetScore();
+  gameOverY = board.getHeight();
 }
 
 export function setGameOver(value) {
