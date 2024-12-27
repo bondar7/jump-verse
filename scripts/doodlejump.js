@@ -46,6 +46,9 @@ function update(timestamp) {
   
   // Calculate the time difference (deltaTime) between frames in seconds
   let deltaTime = (timestamp - lastTimestamp) / 1000; // Convert milliseconds to seconds
+  console.log(deltaTime);
+  
+  deltaTime = Math.min(deltaTime, 0.0085);
   lastTimestamp = timestamp; // Update the lastTimestamp for the next frame
   
   if (isStart) {
