@@ -1,7 +1,7 @@
 import { score, highestScore, updateHighestScore } from "../scripts/doodlejump.js";
 import { board, canvas, context } from "./boardModule.js";
-import { doodler, restart } from "./doodlerModule.js";
-import { movePlatformsUp, platformArray, createPlatforms } from "./platformModule.js";
+import { doodler, drawDoodler, fallingAnim, increaseVelocityY, restart } from "./doodlerModule.js";
+import { movePlatformsUp, platformArray, createPlatforms, checkCollision } from "./platformModule.js";
 
 export let isGameOver = false;
 
@@ -27,6 +27,7 @@ let animSpeed = 850;
 
 export function gameOver(deltaTime) {
   movePlatformsUp(deltaTime);
+  
   updateHighestScore();
   if (platformArray.length == 0) {
     if (gameOverY > targetY) {

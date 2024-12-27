@@ -112,6 +112,7 @@ export function movePlatformsDown(score, deltaTime) {
 export function movePlatformsUp(deltaTime) {
   platformArray.forEach((p,i) => {
     p.setY(p.getY() - Math.abs(velocityY) * deltaTime);
+    
     if (p.spring) {
       if (p.spring.getImg().src === springCompImg.src) {
           p.spring.setY(p.getY() - 21); // Keep relative offset

@@ -43,3 +43,7 @@ body {
 #board {
   background-image: url("/assets/doodlejumpbg.png");
 }
+
+.hide {
+  display: none;
+}

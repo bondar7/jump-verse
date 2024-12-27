@@ -2,7 +2,10 @@ import Doodler from "../models/doodler/Doodler.js";
 import {board, context} from "./boardModule.js"
 import * as animModule from "./animationModule.js"
 
-export const doodler = new Doodler(board.getWidth(), board.getHeight());
+export const doodler = new Doodler(
+  board.getWidth(),
+  board.getHeight(),
+);
 
 //jump
 let initialVelocityY = -800; //starting velocity Y
@@ -70,6 +73,15 @@ export function moveDoodlerY(deltaTime) {
 export function reset() {
   velocityY = initialVelocityY;
   doodler.setImg(doodlerDefault);
+}
+
+export function setDoodlerPositionForStart() {
+  doodler.setX(75);
+  doodler.setY(720);
+}
+export function setDoodlerPositionForGame() {
+  doodler.setX((board.getWidth() - doodler.getWidth()) / 2);
+  doodler.setY(board.getHeight() - doodler.getHeight() - 60);
 }
 
 export function resetForSpring() {
