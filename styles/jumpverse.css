@@ -8,6 +8,23 @@ body {
   justify-content: center; /* Horizontally center items */
   align-items: center; /* Vertically center items */
   height: 100vh; /* Full viewport height */
+  margin: 0;
+  padding: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    #fdf6e3,
+    #fdf6e3 25px,
+    #e0d7c5 26px,
+    #e0d7c5 26px
+  );
+  background-attachment: fixed;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+canvas {
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 #content {
@@ -41,7 +58,7 @@ body {
 }
 
 #board {
-  background-image: url("/assets/doodlejumpbg.png");
+  background-image: url("/assets/gamebg.png");
 }
 
 .hide {

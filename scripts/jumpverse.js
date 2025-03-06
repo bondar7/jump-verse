@@ -1,5 +1,5 @@
-import * as doodlerModule from "../modules/doodlerModule.js";
-import {doodler} from "../modules/doodlerModule.js";
+import * as jumpsterModule from "../modules/jumpsterModule.js";
+import {jumpster} from "../modules/jumpsterModule.js";
 import {board, canvas, context} from "../modules/boardModule.js";
 import * as platformModule from "../modules/platformModule.js";
 import {movePlatforms} from "../modules/platformModule.js"
@@ -16,16 +16,16 @@ let lastTimestamp = null;
 
 window.onload = () => {
   //load sprites for doodle
-  doodlerModule.loadSprites(context);
+  jumpsterModule.loadSprites(context);
 
   //start gameloop
   requestAnimationFrame(update);  
 
-  //set key listeners to move doodler
-  doodlerModule.setKeyListeners();
+  //set key listeners to move jumpster
+  jumpsterModule.setKeyListeners();
 
-  //set doodler's position for preview
-  doodlerModule.setDoodlerPositionForStart();
+  //set jumpster's position for preview
+  jumpsterModule.setJumpsterPositionForStart();
 }
 
 
@@ -58,9 +58,9 @@ function update(timestamp) {
     context.clearRect(0, 0, board.getWidth(), board.getHeight());
 
     //DOODLER
-    doodlerModule.moveByX(deltaTime) //move doodler by x, scaled by deltaTime
-    doodlerModule.slowlyStop(); //handle slowly stop
-    doodlerModule.controlXPosition(); //get back doodler if it's out of the screen
+    jumpsterModule.moveByX(deltaTime) //move jumpster by x, scaled by deltaTime
+    jumpsterModule.slowlyStop(); //handle slowly stop
+    jumpsterModule.controlXPosition(); //get back jumpster if it's out of the screen
     
     //break selected platforms
     platformModule.breakSelectedPlatforms(deltaTime);
@@ -71,9 +71,9 @@ function update(timestamp) {
     //move only movable platforms by x
     platformModule.moveMovablePlatforms(deltaTime);
 
-    if ((!movePlatforms || doodler.getY() >= board.getHeight() / 2) && !isGameOver) {
-      // move the doodler if it's below the screen's midpoint
-      doodlerModule.moveDoodlerY(deltaTime) // scaled by deltaTime
+    if ((!movePlatforms || jumpster.getY() >= board.getHeight() / 2) && !isGameOver) {
+      // move the jumpster if it's below the screen's midpoint
+      jumpsterModule.moveJumpsterY(deltaTime) // scaled by deltaTime
     }
 
     //remove platforms that go off-screen and add new ones
@@ -86,11 +86,11 @@ function update(timestamp) {
   }
   
   if (!isStart) {
-    doodlerModule.fallingAnim(); //doodler's falling animation
-    doodlerModule.increaseVelocityY(deltaTime); //jump physics (move up or down)
+    jumpsterModule.fallingAnim(); //jumpster's falling animation
+    jumpsterModule.increaseVelocityY(deltaTime); //jump physics (move up or down)
     platformModule.checkCollision(); //check collision and draw all platforms at the same time
-    doodlerModule.drawDoodler(context);
-    if (doodler.getY() >= board.getHeight()) {
+    jumpsterModule.drawJumpster(context);
+    if (jumpster.getY() >= board.getHeight()) {
       setGameOver(true);
       }
     }

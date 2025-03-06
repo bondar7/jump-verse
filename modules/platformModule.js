@@ -1,9 +1,9 @@
 import {context, board} from "../modules/boardModule.js";
 import { detectCollision } from "./utils/collision.js";
-import { reset, resetForSpring } from "./doodlerModule.js";
+import { reset, resetForSpring } from "./jumpsterModule.js";
 import * as animModule from "./animationModule.js"
 import {StandartPlatform, BrokenPlatform, MovablePlatform} from "../models/platform/Platform.js";
-import { doodler, velocityY } from "./doodlerModule.js";
+import { jumpster, velocityY } from "./jumpsterModule.js";
 import Spring from "../models/spring/Spring.js";
 
 export let platformArray;
@@ -53,7 +53,7 @@ export function createPlatforms() {
 export function checkCollision() {
   platformArray.forEach((p) => {
     if (p.spring
-       && detectCollision(doodler, p.spring) 
+       && detectCollision(jumpster, p.spring) 
        && velocityY >= 1 
        && !(p instanceof BrokenPlatform)) 
        {
@@ -62,10 +62,10 @@ export function checkCollision() {
         movePlatforms = true;
       } else {
 
-    if (detectCollision(doodler, p) && velocityY >= 1 && !(p instanceof BrokenPlatform)) {
-      reset(); // set default doodler image and reset velocityY;
+    if (detectCollision(jumpster, p) && velocityY >= 1 && !(p instanceof BrokenPlatform)) {
+      reset(); // set default jumpster image and reset velocityY;
       movePlatforms = true; // enable platform movement
-    } else if (detectCollision(doodler, p) && p instanceof BrokenPlatform && velocityY >= 1) {
+    } else if (detectCollision(jumpster, p) && p instanceof BrokenPlatform && velocityY >= 1) {
       //if detects collision and platform is broken - break it.
       startBreakPlatform = true;
       platfromsToBreak.push(p);
@@ -88,8 +88,8 @@ export function breakSelectedPlatforms(deltaTime) {
 
 export function movePlatformsDown(score, deltaTime) {
   if (movePlatforms) {
-    if (velocityY < 0 && doodler.getY() < board.getHeight() / 2) {
-    // move platforms downward as the doodler rises above the screen's midpoint
+    if (velocityY < 0 && jumpster.getY() < board.getHeight() / 2) {
+    // move platforms downward as the jumpster rises above the screen's midpoint
     platformArray.forEach(p => {
       p.setY(p.getY() + Math.abs(velocityY) * deltaTime);
       if (p.spring) {
@@ -103,7 +103,7 @@ export function movePlatformsDown(score, deltaTime) {
     // update score
     score.innerHTML = parseInt(score.innerHTML) + 1;
   } else if (velocityY > 0) {
-    // stop moving platforms when the doodler starts falling
+    // stop moving platforms when the jumpster starts falling
       movePlatforms = false;
     }
   }
@@ -124,10 +124,10 @@ export function movePlatformsUp(deltaTime) {
       platformArray.splice(i, 1);
     }
   })
-  if (doodler.getY() > board.getHeight() / 2 && platformArray.length > 0) {
-    doodler.setY(doodler.getY() - 700 * deltaTime);
+  if (jumpster.getY() > board.getHeight() / 2 && platformArray.length > 0) {
+    jumpster.setY(jumpster.getY() - 700 * deltaTime);
   } else {
-    doodler.setY(doodler.getY() + 700 * deltaTime);
+    jumpster.setY(jumpster.getY() + 700 * deltaTime);
   }
 }
 

@@ -1,6 +1,6 @@
-import { score, highestScore, updateHighestScore } from "../scripts/doodlejump.js";
+import { score, highestScore, updateHighestScore } from "../scripts/jumpverse.js";
 import { board, canvas, context } from "./boardModule.js";
-import { doodler, drawDoodler, fallingAnim, increaseVelocityY, restart, setDoodlerPositionForStart } from "./doodlerModule.js";
+import { jumpster, drawJumpster, fallingAnim, increaseVelocityY, restart, setJumpsterPositionForStart } from "./jumpsterModule.js";
 import { setStart } from "./gameStartModule.js";
 import { movePlatformsUp, platformArray, createPlatforms, checkCollision } from "./platformModule.js";
 import { hideTopbar, resetScore } from "./utils/topbar.js";
@@ -68,7 +68,7 @@ function displayGameOver() {
   // Score Texts
   drawCenteredText(`your score: ${score.innerHTML}`, centerX, gameOverY + 140, fontSize, fontColor);
   drawCenteredText(`your high score: ${highestScore}`, centerX, gameOverY + 175, fontSize, fontColor);
-  drawCenteredText("your name: Doodler", centerX, gameOverY + 210, fontSize, fontColor);
+  drawCenteredText("your name: Jumpster", centerX, gameOverY + 210, fontSize, fontColor);
 
   context.drawImage(
     playAgainBtn.image, 
@@ -130,9 +130,9 @@ function handleClicks(event) {
 function restartGame() {
   context.clearRect(0,0,board.getWidth(), board.getHeight()); // clear entire canvas
   playAgainBtn.image = playAgainImage; // set default image for restart btn
-  restart(); // reset doodler's velocity x and y
-  doodler.setY(board.getHeight() - 125); // set default Y
-  doodler.setX(board.getWidth()/2 + 15); // set default X
+  restart(); // reset jumpster's velocity x and y
+  jumpster.setY(board.getHeight() - 125); // set default Y
+  jumpster.setX(board.getWidth()/2 + 15); // set default X
   gameOverY = board.getHeight(); // reset for an animation
   updateHighestScore(); // update highest score
   resetScore(); // reset score
@@ -145,7 +145,7 @@ function openMenu() {
   setStart(true);
   setGameOver(false)
   restart();
-  setDoodlerPositionForStart();
+  setJumpsterPositionForStart();
   hideTopbar();
   resetScore();
   gameOverY = board.getHeight();

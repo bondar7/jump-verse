@@ -1,4 +1,4 @@
-export default class Doodler {
+export default class Jumpster {
     // Private fields
     #width; 
     #height;
@@ -12,14 +12,14 @@ export default class Doodler {
   constructor(boardWidth, boardHeight) {
     this.#boardWidth = boardWidth;
     this.#boardHeight = boardHeight;
-    this.#width = 70; // Doodler's width
-    this.#height = 70; // Doodler's height
-    // Direction Doodler is moving
+    this.#width = 70; // Jumpster's width
+    this.#height = 70; // Jumpster's height
+    // Direction Jumpster is moving
     this.#dirX = 1;
     // Calculate initial position
     this.#x = (this.#boardWidth - this.#width) / 2; // Horizontal center
     this.#y = this.#boardHeight - this.#height - 60; // Slightly above bottom
-    // Doodler's img
+    // Jumpster's img
     this.#img = null;
     this.isMovingRight = false;
     this.isMovingLeft = false;

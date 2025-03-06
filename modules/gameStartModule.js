@@ -1,8 +1,8 @@
 import { StandartPlatform } from "../models/platform/Platform.js";
 import { detectCollision } from "../modules/utils/collision.js";
 import { context, canvas, board } from "./boardModule.js";
-import * as doodlerModule from "./doodlerModule.js"
-import { doodler } from "./doodlerModule.js";
+import * as jumpsterModule from "./jumpsterModule.js"
+import { jumpster } from "./jumpsterModule.js";
 import { createPlatforms } from "./platformModule.js";
 import { showTopbar } from "./utils/topbar.js";
 
@@ -20,7 +20,7 @@ const monster3 = new Image();
 const monster4 = new Image();
 const monster5 = new Image();
 
-bg.src = "../assets/doodlejumpbg2.png";
+bg.src = "../assets/gamebg2.png";
 darkHole.src = "../assets/start-screen/dark_hole.png";
 gameName.src = "../assets/start-screen/game_name.png";
 saucer.src = "../assets/start-screen/saucer.png"
@@ -60,18 +60,18 @@ export function drawStart(deltaTime) {
   context.drawImage(saucer, 370, 20, 120, 60);
 
   context.drawImage(
-    doodler.getImg(), 
-    doodler.getX(), 
-    doodler.getY(), 
-    doodler.getWidth(), 
-    doodler.getHeight() 
+    jumpster.getImg(), 
+    jumpster.getX(), 
+    jumpster.getY(), 
+    jumpster.getWidth(), 
+    jumpster.getHeight() 
   );
 
-  doodlerModule.increaseVelocityY(deltaTime);
-  doodlerModule.moveDoodlerY(deltaTime);
-  doodlerModule.fallingAnim();
-  if(detectCollision(doodler, platform)) {
-    doodlerModule.reset()
+  jumpsterModule.increaseVelocityY(deltaTime);
+  jumpsterModule.moveJumpsterY(deltaTime);
+  jumpsterModule.fallingAnim();
+  if(detectCollision(jumpster, platform)) {
+    jumpsterModule.reset()
   }
 }
 
@@ -89,8 +89,8 @@ export function playBtnListener(event) {
       playBtn.img = playBtnClickedImg;
       setTimeout(() => {
         isStart = false;
-        doodlerModule.setDoodlerPositionForGame();
-        doodlerModule.reset();
+        jumpsterModule.setJumpsterPositionForGame();
+        jumpsterModule.reset();
         showTopbar();
         createPlatforms(); // create start platforms
       }, 110);   

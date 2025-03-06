@@ -6,7 +6,7 @@ import {
   updatePlatformArray 
   } from "./platformModule.js";
 
-//doodler falling
+//jumpster falling
 const fallingSprites = [];
 let fallingSpriteCount = 0;
 
@@ -14,10 +14,10 @@ let fallingSpriteCount = 0;
 const breakingSprites  = [];
 let breakingSpriteCount = 0;
 
-//doodler falling
-let doodlerFalling = new Image();
-doodlerFalling.src = "../assets/doodler/doodler-falling.png";
-fallingSprites.push(doodlerFalling);
+//jumpster falling
+let jumpsterFalling = new Image();
+jumpsterFalling.src = "../assets/jumpster/jumpster-falling.png";
+fallingSprites.push(jumpsterFalling);
 
 //platform breaking
 for (let i = 1; i < 11; i++) {
@@ -40,9 +40,9 @@ function animate(object, spriteList, spriteCount, frameSpeed) {
 }
 
 //falling anim
-export function falling(doodler, velocityY) {
+export function falling(jumpster, velocityY) {
   if (velocityY > 120) {
-   fallingSpriteCount = animate(doodler, fallingSprites, fallingSpriteCount, 25)
+   fallingSpriteCount = animate(jumpster, fallingSprites, fallingSpriteCount, 25)
   }
 }
 
